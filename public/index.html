@@ -17,21 +17,32 @@
 
 </head>
 <body>
+	<div class="container" x-data="{ garments : []}" x-init="fetch('./garments.json')
+	.then(r => r.json())
+	.then(userData => garments = userData )"  >
 
-	<h1>Calling APIs in AlpineJS</h1>
 
-	<div class="container">
 		<h1>Missy Tee - clothing store</h1>
+		<h4>Calling APIs in AlpineJS</h4>
 		<div class="filter" >
 			<h2>Filter</h2>
+			<div x-data="{pet: ''}">
+				<input type="radio" id="cat" value="cat" x-model="pet">
+				<input type="radio" id="dog" value="dog" x-model="pet">
+				<p>Pet: <span x-text="pet"></span></p>
+			  </div>
+
 			<div class="genders" >
 				<label>
 					<input type="radio" name="gender" value="All"> All
 				</label>
+		
 				
 				<label>
 					<input type="radio" name="gender" value="Male"> Male
+					
 				</label>
+
 
 				<label>
 					<input type="radio" name="gender" value="Female"> Female
@@ -120,11 +131,7 @@
 			
 			<div class="searchResults" >
 				<h2>Call API on page load</h2>
-				<div x-data="{ garments : []}" x-init="fetch('./garments.json')
-						.then(r => r.json())
-						.then(userData => garments = userData )"  >
-
-
+				
 						<table class="table">
 							<caption></caption>
 							<thead>
@@ -139,7 +146,7 @@
 						<template x-for="garment in garments" >
 
 						<tr>
-							<td><img src="images/collared-128x128-455119.png" alt="Golf t-shirt" width="50" height="50"></td>
+							<td><img :src="`/images/${garment.img}`" alt="Golf t-shirt" width="80" height="80"></td>
 							<td x-text="garment.description"></td>
 							<td x-text="garment.price"></td>
 							<td x-text="garment.gender"></td>
@@ -150,7 +157,6 @@
 					<!-- </ul> -->
 				</div>
 			</div>
-		</div>
 	</div>
 
 
@@ -161,8 +167,8 @@
 <!-- The actual snackbar -->
 <div id="snackbar">This message shows a success</div>
 
-	<script src="app.js"></script>
-	<!-- <script src="field-manager.js"></script>
+	<!-- <script src="app.js"></script>
+	<script src="field-manager.js"></script>
 	<script src="add-garment.js"></script> -->
 </body>
 </html>
