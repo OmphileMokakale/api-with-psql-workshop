@@ -17,7 +17,11 @@
 
 </head>
 <body>
-	<div class="container" x-data="{ garments : []}" x-init="fetch('./garments.json')
+	<div class="container" x-data="{ garments : [],'description': '',
+	img: '',
+	season: '',
+	gender: '',
+	price: '', show: false}" x-init="fetch('./garments.json')
 	.then(r => r.json())
 	.then(userData => garments = userData )"  >
 
@@ -26,15 +30,11 @@
 		<h4>Calling APIs in AlpineJS</h4>
 		<div class="filter" >
 			<h2>Filter</h2>
-			<div x-data="{pet: ''}">
-				<input type="radio" id="cat" value="cat" x-model="pet">
-				<input type="radio" id="dog" value="dog" x-model="pet">
-				<p>Pet: <span x-text="pet"></span></p>
-			  </div>
 
 			<div class="genders" >
 				<label>
 					<input type="radio" name="gender" value="All"> All
+					<p>Gender: <span x-text="pet"></span></p>
 				</label>
 		
 				
@@ -84,10 +84,11 @@
 		<div class="addGarment" >
 			
 			<div class="add button mt1" >
-				<a href="">Add garment</a>
+				 <button class="Mdesign AW" @click="show = !show">Add garment</button> 
 			</div>
 
-			<div class="add garment hidden">
+
+			<div x-show="show" class="add garment">
 				<h2>Add garment</h2>
 				<img src="/images/{{img}}" alt="">
 
@@ -95,31 +96,36 @@
 					
 					<div class="field" >
 						<label for="">Description</label>
-						<input type="text" name="description" class="description" >
+						<input type="text" name="description" class="description" x-model="description">
 					</div>
 					<div class="field" >
 						<label for="">Image</label>
-						<input type="text" name="img" class="img"  >
+						<input type="text" name="img" class="img" x-model="img" >
 					</div>
 					<div class="field">
 						<label for="">Price</label>
-						<input type="number" name="price" step = "0.01" class="price" >
+						<input type="number" name="price" step = "0.01" class="price"  x-model="price" >
 					</div>
 					<div class="field">
 						<label for="">Gender</label>
 						<div>
-							<input type="text" name="gender" class="gender" >
+							<input type="text" name="gender" class="gender" x-model="gender">
 						</div>
 					</div>
 					<div class="field">
 						<label for="">Season</label>
 						<div>
-							<input type="text" name="season" class="season" >
+							<input type="text" name="season" class="season" x-model="season">
 						</div>
 					</div>
 					<div class="mt1">
-						<input type="button" name="action" value="Add" class="addGarmentBtn"  >
-						<input type="button" name="action" value="Hide" class="hideAddGarmetBtn" >
+						<button class="Mdesign AW" @click="garments.push({
+							description: description,
+							img: img,
+							season: season,
+							gender: gender,
+							price: price})">Add</button>
+						<!-- <input type="button" name="action" value="Hide" class="hideAddGarmetBtn" > -->
 					</div>
 				<!-- </form> -->
 			</div>
@@ -130,8 +136,6 @@
 			<h2>Garments</h2>
 			
 			<div class="searchResults" >
-				<h2>Call API on page load</h2>
-				
 						<table class="table">
 							<caption></caption>
 							<thead>
