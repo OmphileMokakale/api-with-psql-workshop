@@ -18,6 +18,7 @@ app.use(express.static('public'));
 const DATABASE_URL = process.env.DATABASE_URL;
 console.log(process.env.DATABASE_URL);
 const pgp = PgPromise({});
+
 const config = {
   connectionString: process.env.DATABASE_URL || 'postgres://gary:gar123@localhost:5432/garment_app',
   max: 30,
@@ -31,12 +32,6 @@ API(app, db);
 app.get('/',function(req,res) {
 	res.render('index.html');
   });
-
-// app.get('public/index.html', function(req,res){
-// 	res.redirect('this is my app');
-// 	})
-
-
 
 
 const PORT = process.env.PORT || 3000;
