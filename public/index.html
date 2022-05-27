@@ -17,13 +17,23 @@
 
 </head>
 <body>
+	
 	<div class="container" x-data="{ garments : [],'description': '',
+	seasonFilter: 'All',
+    genderFilter: 'All',
 	img: '',
 	season: '',
 	gender: '',
 	price: '', show: false}" x-init="fetch('./garments.json')
 	.then(r => r.json())
-	.then(userData => garments = userData )"  >
+	.then(userData => garments = userData )" x-init= " function filterData() {
+
+		fetch(`/api/garments/gender/${genderFilter}/season/${seasonFilter}`, this.config)
+		.then(r => r.json())
+		.then(userData => garments = userData )
+		
+		
+	}" >
 
 
 		<h1>Missy Tee - clothing store</h1>
@@ -33,37 +43,38 @@
 
 			<div class="genders" >
 				<label>
-					<input type="radio" name="gender" value="All"> All
-					<p>Gender: <span x-text="pet"></span></p>
+					<input type="radio" name="gender" value="All" x-model="garments"> All
 				</label>
 		
 				
 				<label>
-					<input type="radio" name="gender" value="Male"> Male
-					
+					<input type="radio" name="gender" value="Male" x-model="garments"> Male
+					<!-- <p>Pet: <span x-text="garments"></span></p> -->
 				</label>
 
 
 				<label>
-					<input type="radio" name="gender" value="Female"> Female
+					<input type="radio" name="gender" value="Female" x-model="garments"> Female
 				</label>
 				<label>
-					<input type="radio" name="gender" value="Unisex"> Unisex
+					<input type="radio" name="gender" value="Unisex" x-model="garments"> Unisex
 				</label>
 			</div>
 			<div class="seasons" >
 				
 				<label >
-					<input type="radio" name="season" value="All"> All
+					<input type="radio" name="season" value="All" x-model="garments.season"> All
 				</label>
 				<label>
-					<input type="radio" name="season" value="Summer"> Summer
+					<input type="radio" name="season" value="Summer" x-model="garments.season"> Summer
 				</label>
 				<label>
-					<input type="radio" name="season" value="Winter"> Winter
+					<input type="radio" name="season" value="Winter" x-model="garments"> Winter
+
+					<input @change="filterData()" x-model="seasonFilter" type="radio" name="season" value="Winter"> Winter
 				</label>
 				<label>
-					<input type="radio" name="season" value="All Seasons"> All seasons
+					<input type="radio" name="season" value="All Seasons" x-model="garments"> All seasons
 				</label>
 			</div>
 
@@ -72,7 +83,7 @@
 			</div> -->
 			<div>
 				Filter by price range: 
-				<input type="range" name="priceRange" max="1000" step="50" class="priceRange" value="0"  >
+				<input type="range" name="priceRange" max="1000" step="50" class="priceRange" value="0" x-model="garments" >
 				R<span class="showPriceRange" >0</span>.00
 			</div>
 		</div>
@@ -171,8 +182,8 @@
 <!-- The actual snackbar -->
 <div id="snackbar">This message shows a success</div>
 
-	<!-- <script src="app.js"></script>
-	<script src="field-manager.js"></script>
+	 <script src="app.js"></script>
+	<!--<script src="field-manager.js"></script>
 	<script src="add-garment.js"></script> -->
 </body>
 </html>
