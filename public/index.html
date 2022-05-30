@@ -223,21 +223,33 @@
 
 						})
 				},
+				// addGarments() {
+				// 	const results = garments.push({
+				// 		description: this.description,
+				// 		img: this.img,
+				// 		season: this.season,
+				// 		gender: this.gender,
+				// 		price: this.price
+				// 	})
+					
+				// 	this.garments = results;
+				// },
 
-				   filterByPrice() {
+
+				filterByPrice() {
 					console.log(this.price);
 					const maxPrice = Number(this.price)
 					fetch('./garments.json')
 						.then(r => r.json())
 						.then(userData => {
-							const filteredGarments = userData.filter(garment => {
+							const results = userData.filter(garment => {
 								// filter only if the maxPrice is bigger than maxPrice
 								if (maxPrice > 0) {
-									return garment.price <= maxPrice;
+									return garment.price >= maxPrice;
 								}
 								return true;
 							});
-							this.garments = filteredGarments;
+							this.garments = results;
 						})
 
 				}
