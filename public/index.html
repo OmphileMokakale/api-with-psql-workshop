@@ -88,12 +88,12 @@
 
 		<div class="addGarment">
 
-			<div class="add button mt1">
-				<button class="Mdesign AW" @click="show = !show">Add garment</button>
+			<div class="add button mt1" >
+				<button class="Mdesign AW" @click="show = !show" >Add garment</button>
 			</div>
 
 
-			<div x-show="show" class="add garment">
+			<div x-show="show" class="add garment" x-cloak>
 				<h2>Add garment</h2>
 				<img src="/images/{{img}}" alt="">
 
