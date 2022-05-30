@@ -78,7 +78,7 @@
 				Filter by price range:
 				<input @change="filterByPrice()" type="range" name="priceRange" max="1000" step="50" class="priceRange"
 					value="0" x-model="price">
-				R<span class="showPriceRange">0</span>.00
+				R<span class="showPriceRange" x-text="price"></span>
 			</div>
 		</div>
 
@@ -178,7 +178,7 @@
 				img: '',
 				season: 'All',
 				gender: 'All',
-				price: '',
+				price: '0.00',
 				show: false,
 				init() {
 					fetch('./garments.json')
