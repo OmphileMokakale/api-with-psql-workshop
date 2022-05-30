@@ -30,20 +30,24 @@
 
 			<div class="genders">
 				<label>
-					<input @change="filterByGender('Male'),filterByGenderAndSeason()" type="radio" name="gender" value="All" x-model="gender"> All
+					<input @change="filterByGenderAndSeason()" type="radio" name="gender" value="All" x-model="gender">
+					All
 				</label>
 
 
 				<label>
-					<input @change="filterByGender('Male'),filterByGenderAndSeason()" type="radio" name="gender" value="Male"  x-model="gender"> Male
+					<input @change="filterByGenderAndSeason()" type="radio" name="gender" value="Male" x-model="gender">
+					Male
 				</label>
 
 
 				<label>
-					<input @change="filterByGender('Female'),filterByGenderAndSeason()" type="radio" name="gender" value="Female"  x-model="gender"> Female
+					<input @change="filterByGenderAndSeason()" type="radio" name="gender" value="Female"
+						x-model="gender"> Female
 				</label>
 				<label>
-					<input @change="filterByGender('Unisex'),filterByGenderAndSeason()" type="radio" name="gender" value="Unisex"  x-model="gender"> Unisex
+					<input @change="filterByGenderAndSeason()" type="radio" name="gender" value="Unisex"
+						x-model="gender"> Unisex
 				</label>
 			</div>
 			<div class="seasons">
@@ -52,15 +56,18 @@
 					<input type="radio" name="season" value="All"> All
 				</label>
 				<label>
-					<input @change="filterBySeason('Summer'),filterByGenderAndSeason()" type="radio" name="season" value="Summer"  x-model="season"> Summer
+					<input @change="filterByGenderAndSeason()" type="radio" name="season" value="Summer"
+						x-model="season"> Summer
 				</label>
 				<label>
 					<!-- <input type="radio" name="season" value="Winter" x-model="garments"> Winter -->
-					<input @change="filterBySeason('Winter'),filterByGenderAndSeason()" type="radio" name="season" value="Winter" x-model="season">
+					<input @change="filterByGenderAndSeason()" type="radio" name="season" value="Winter"
+						x-model="season">
 					Winter
 				</label>
 				<label>
-					<input @change="filterBySeason('Winter'),filterByGenderAndSeason()" type="radio" name="season" value="All Seasons" x-model="season"> All seasons
+					<input @change="filterByGenderAndSeason()" type="radio" name="season" value="All Seasons"
+						x-model="season"> All seasons
 				</label>
 			</div>
 
@@ -69,8 +76,8 @@
 			</div> -->
 			<div>
 				Filter by price range:
-				<input type="range" name="priceRange" max="1000" step="50" class="priceRange" value="0"
-					x-model="garments">
+				<input @change="filterByPrice()" type="range" name="priceRange" max="1000" step="50" class="priceRange"
+					value="0" x-model="price">
 				R<span class="showPriceRange">0</span>.00
 			</div>
 		</div>
@@ -166,6 +173,7 @@
 		document.addEventListener('alpine:init', () => {
 			Alpine.data('garments', () => ({
 				garments: [],
+				filteredGaments: [],
 				description: '',
 				img: '',
 				season: 'All',
@@ -177,39 +185,62 @@
 						.then(r => r.json())
 						.then(userData => this.garments = userData)
 				},
+				// filterBySeason(season) {
+				// 	const results = this.garments.filter(garment => {
+				// 		return garment.season === season;
+				// 	})
+				// 	this.garments = results;
+				// },
 
-				filterBySeason(season) {
-					const results = this.garments.filter(garment => {
-						return garment.season === season;
-					})
-					this.garments = results;
-				},
-
-				filterByGender(gender) {
-					const results = this.garments.filter(garment => {
-						return garment.gender === gender;
-					})
-					this.garments = results;
-				}
-				,
+				// filterByGender(gender) {
+				// 	const results = this.garments.filter(garment => {
+				// 		return garment.gender === gender;
+				// 	})
+				// 	this.garments = results;
+				// }
+				// ,
 				filterByGenderAndSeason() {
 					console.log(this.season);
 
-					// const results = this.garments.filter(garment => {
-					// 	if (gender != 'All' && season != 'All') {
-					// 		return garment.gender === gender
-					// 			&& garment.season === season;
-					// 	} else if (gender != 'All') { // if gender was supplied
-					// 		return garment.gender === gender
-					// 	} else if (season != 'All') { // if season was supplied
-					// 		return garment.season === season
-					// 	}
-					// 	return true;
+					fetch('./garments.json')
+						.then(r => r.json())
+						.then(userData => {
 
-					// })
+							const results = userData.filter(garment => {
+								if (this.gender != 'All' && this.season != 'All') {
+									return garment.gender === this.gender
+										&& garment.season === this.season;
+								} else if (this.gender != 'All') { // if gender was supplied
+									return garment.gender === this.gender
+								} else if (this.season != 'All') { // if season was supplied
+									return garment.season === this.season
+								}
+								return true;
+							})
+
+							this.garments = results;
+							console.log(results);
+
+						})
+				},
+
+				   filterByPrice() {
+					console.log(this.price);
+					const maxPrice = Number(this.price)
+					fetch('./garments.json')
+						.then(r => r.json())
+						.then(userData => {
+							const filteredGarments = userData.filter(garment => {
+								// filter only if the maxPrice is bigger than maxPrice
+								if (maxPrice > 0) {
+									return garment.price <= maxPrice;
+								}
+								return true;
+							});
+							this.garments = filteredGarments;
+						})
 
 				}
-
 			}))
 		})
 	</script>
