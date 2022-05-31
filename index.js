@@ -25,7 +25,7 @@ const config = {
   ssl:{ rejectUnauthorized : false}
 };
 
-const db = pgp(config);;
+const db = pgp(config);
 
 API(app, db);
 
