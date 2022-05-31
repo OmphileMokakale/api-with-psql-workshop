@@ -208,11 +208,11 @@
 				filterByGenderAndSeason() {
 					console.log(this.season);
 
-					fetch('./garments.json')
+					fetch('/api/garments')
 						.then(r => r.json())
 						.then(userData => {
 
-							const results = userData.filter(garment => {
+							const results = userData.data.filter(garment => {
 								if (this.gender != 'All' && this.season != 'All') {
 									return garment.gender === this.gender
 										&& garment.season === this.season;
@@ -239,10 +239,10 @@
 				filterByPrice() {
 					console.log(this.price);
 					const maxPrice = Number(this.priceRange)
-					fetch('./garments.json')
+					fetch('/api/garments')
 						.then(r => r.json())
 						.then(userData => {
-							const results = userData.filter(garment => {
+							const results = userData.data.filter(garment => {
 								// filter only if the maxPrice is bigger than maxPrice
 								if (maxPrice > 0) {
 									return garment.price >= maxPrice;
