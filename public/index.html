@@ -60,7 +60,6 @@
 						x-model="season"> Summer
 				</label>
 				<label>
-					<!-- <input type="radio" name="season" value="Winter" x-model="garments"> Winter -->
 					<input @change="filterByGenderAndSeason()" type="radio" name="season" value="Winter"
 						x-model="season">
 					Winter
@@ -70,10 +69,6 @@
 						x-model="season"> All seasons
 				</label>
 			</div>
-
-			<!-- <div class="description">
-
-			</div> -->
 			<div>
 				Filter by price range:
 				<input @change="filterByPrice()" type="range" name="priceRange" max="1000" step="50" class="priceRange"
@@ -88,8 +83,8 @@
 
 		<div class="addGarment">
 
-			<div class="add button mt1" >
-				<button class="Mdesign AW" @click="show = !show" >Add garment</button>
+			<div class="add button mt1">
+				<button class="Mdesign AW" @click="show = !show">Add garment</button>
 			</div>
 
 
@@ -139,39 +134,43 @@
 
 		<div>
 			<h2>Garments</h2>
-
-			<div class="searchResults">
-				<table class="table">
-					<caption></caption>
-					<thead>
-						<tr>
-							<th scope="col">Image</th>
-							<th scope="col">Description</th>
-							<th scope="col">Price</th>
-							<th scope="col">Gender</th>
-							<th scope="col">Season</th>
-						</tr>
-					</thead>
+			<strong><div x-text="garments.length"> </div>garments found</strong>
+			<div class="garments">
 					<template x-for="garment in garments">
 
-						<tr>
-							<td><img :src="`/images/${garment.img}`" alt="Golf t-shirt" width="80" height="80"></td>
-							<td x-text="garment.description"></td>
+							<div class="garment" >
+								<span  x-text="garment.description"> </span>
+								<br>
+								<img :src="`/images/${garment.img}`" alt="Golf t-shirt" width="80" height="80">
+								<br>
+								R<span  x-text="garment.price"> </span>
+								<br>
+								<span  x-text="garment.gender"> </span>
+								<br>
+								<span  x-text="garment.season"> </span>
+							</div>
+						<div class="field" x-text="`garment.description`">
+							<!-- <td x-text="garment.description"></td> -->
+						</div>
+						<div class="field" >
 							<td x-text="garment.price"></td>
+						</div>
+							<div class="field" >
 							<td x-text="garment.gender"></td>
+							</div>
+							<div class="field" >
 							<td x-text="garment.season"></td>
-						</tr>
+						</div>
 					</template>
-				</table>
-				<!-- </ul> -->
+				
 			</div>
 		</div>
 	</div>
 
-
 	<script>
 		document.addEventListener('alpine:init', () => {
 			Alpine.data('garments', () => ({
+
 				garments: [],
 				filteredGaments: [],
 				description: '',
@@ -185,20 +184,24 @@
 						.then(r => r.json())
 						.then(userData => this.garments = userData)
 				},
-				// filterBySeason(season) {
-				// 	const results = this.garments.filter(garment => {
-				// 		return garment.season === season;
-				// 	})
-				// 	this.garments = results;
-				// },
+				myErrorMessage() {
+					fetch('./garments.json')
+						.then(r => r.json())
+						.then(userData => {
+							return {
+								message: '',
+								showMessage() {
+									return this.message.length > 0;
+								},
+								onclick() {
+									this.message = 'No garments found'; // set error message
+									setTimeout(() => this.message = '', 3000) // this will clear your message after 3s.
+								}
 
-				// filterByGender(gender) {
-				// 	const results = this.garments.filter(garment => {
-				// 		return garment.gender === gender;
-				// 	})
-				// 	this.garments = results;
-				// }
-				// ,
+							}
+						})
+				},
+
 				filterByGenderAndSeason() {
 					console.log(this.season);
 
@@ -215,6 +218,20 @@
 								} else if (this.season != 'All') { // if season was supplied
 									return garment.season === this.season
 								}
+								else if (filteredGaments.Array.lenth > 0) {
+									return {
+										message: '',
+										showMessage() {
+											return this.message.length > 0;
+										},
+
+										onclick() {
+											this.message = 'No garments found'; // set error message
+											setTimeout(() => this.message = '', 3000) // this will clear your message after 3s.
+										}
+
+									}
+								}
 								return true;
 							})
 
@@ -223,6 +240,7 @@
 
 						})
 				},
+
 				// addGarments() {
 				// 	const results = garments.push({
 				// 		description: this.description,
@@ -231,7 +249,7 @@
 				// 		gender: this.gender,
 				// 		price: this.price
 				// 	})
-					
+
 				// 	this.garments = results;
 				// },
 
