@@ -19,13 +19,14 @@ const DATABASE_URL = process.env.DATABASE_URL;
 console.log(process.env.DATABASE_URL);
 const pgp = PgPromise({});
 
+//for the database to show on heroku
 const config = {
   connectionString: process.env.DATABASE_URL || 'postgres://gary:gar123@localhost:5432/garment_app',
   max: 30,
   ssl:{ rejectUnauthorized : false}
 };
 
-const db = pgp(config);
+const db = pgp(DATABASE_URL); 
 
 API(app, db);
 
