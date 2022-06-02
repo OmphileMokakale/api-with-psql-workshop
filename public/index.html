@@ -150,6 +150,8 @@
 						<span x-text="garment.gender"> </span>
 						<br>
 						<span x-text="garment.season"> </span>
+						<br>
+						<button class="Mdesign AW" @click="show = !show">Delete garment</button>
 					</div>
 
 			</div>
@@ -230,9 +232,9 @@
 								return true;
 							});
 							this.garments = results;
-							if(results.length<1){
-								this.errorMessage('No Garments Found');
-							}
+							// if(results.length<1){
+							// 	this.errorMessage('No Garments Found');
+							// }
 						})
 
 				}
