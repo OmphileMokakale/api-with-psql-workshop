@@ -224,7 +224,7 @@
 						.then(userData => {
 							const results = userData.data.filter(garment => {
 								// filter only if the maxPrice is bigger than maxPrice
-								if (maxPrice <= 0) {
+								if (maxPrice < 0) {
 									return garment.price >= maxPrice;
 								}
 								return true;
