@@ -142,9 +142,13 @@
 
 					<div class="garment">
 						<span x-text="garment.description"> </span>
+						<br>
 						<img :src="`/images/${garment.img}`" alt="Golf t-shirt" width="100" height="80">
+						<br>
 						R<span x-text="garment.price"> </span>
+						<br>
 						<span x-text="garment.gender"> </span>
+						<br>
 						<span x-text="garment.season"> </span>
 					</div>
 
@@ -200,9 +204,6 @@
 								} else if (this.season != 'All') { // if season was supplied
 									return garment.season === this.season
 								}
-								else if (filteredGaments.Array.lenth > 0) {
-
-								}
 								return true;
 							})
 
@@ -223,12 +224,15 @@
 						.then(userData => {
 							const results = userData.data.filter(garment => {
 								// filter only if the maxPrice is bigger than maxPrice
-								if (maxPrice > 0) {
+								if (maxPrice < 0) {
 									return garment.price >= maxPrice;
 								}
 								return true;
 							});
 							this.garments = results;
+							if(results.length<1){
+								this.errorMessage('No Garments Found');
+							}
 						})
 
 				}
