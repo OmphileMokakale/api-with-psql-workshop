@@ -7,6 +7,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Missy Tee - clothing store</title>
 	<!-- Alpine Plugins -->
+	<script defer src="https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+
+	<!-- Alpine Plugins -->
 	<script src="//unpkg.com/alpinejs" defer></script>
 
 	<!-- Bootstrap CSS -->
@@ -78,7 +81,7 @@
 		</div>
 
 		<div class="message" x-show="showMessage()">
-          <span x-text="message"></span>
+			<span x-text="message"></span>
 		</div>
 
 		<div class="addGarment">
@@ -138,7 +141,7 @@
 				<div x-text="garments.length"> </div>garments found
 			</strong>
 			<div class="garments">
-				<template x-for="garment in garments">
+				<template x-for="(garment,index) in garments">
 
 					<div class="garment">
 						<span x-text="garment.description"> </span>
@@ -152,7 +155,7 @@
 						<span x-text="garment.season"> </span>
 						<br>
 						<br>
-						<button class="Mdesign AW" @click="show = !show">Delete</button>
+						<button class="Mdesign AW" @click="garments.splice(index,1);">Delete</button>
 					</div>
 
 			</div>
@@ -163,83 +166,90 @@
 
 	<script>
 		document.addEventListener('alpine:init', () => {
-			Alpine.data('garments', () => ({
+			Alpine.data('garments', function () {
 
-				garments: [],
-				filteredGaments: [],
-				description: '',
-				img: '',
-				season: 'All',
-				gender: 'All',
-				price: '0.00',
-				priceRange: '0.00',
-				show: false,
-				message: '',
-				showMessage() {
-					return this.message.length > 0;
-				},
+				return {
+					garments: [],
+					filteredGaments: [],
+					description: '',
+					img: '',
+					season: 'All',
+					gender: 'All',
+					price: '0.00',
+					priceRange: '0.00',
+					show: false,
+					message: '',
+					token: this.$persist(''),
+					showMessage() {
+						return this.message.length > 0;
+					},
 
-				errorMessage(message) {
-					this.message = message; // set error message
-					setTimeout(() => this.message = '', 3000) // this will clear your message after 3s.
-				},
+					errorMessage(message) {
+						this.message = message; // set error message
+						setTimeout(() => this.message = '', 3000) // this will clear your message after 3s.
+					},
 
 
-				init() {
-					fetch('/api/garments')
-						.then(r => r.json())
-						.then(userData => this.garments = userData.data)
-				},
+					init() {
+						fetch('/api/garments')
+							.then(r => r.json())
+							.then(userData => this.garments = userData.data)
 
-				filterByGenderAndSeason() {
-					console.log(this.season);
+						fetch('/')
+							.then(r => r.json())
+							.then(userToken => this.token = userToken.data.token)
 
-					fetch('/api/garments')
-						.then(r => r.json())
-						.then(userData => {
+					},
 
-							const results = userData.data.filter(garment => {
-								if (this.gender != 'All' && this.season != 'All') {
-									return garment.gender === this.gender
-										&& garment.season === this.season;
-								} else if (this.gender != 'All') { // if gender was supplied
-									return garment.gender === this.gender
-								} else if (this.season != 'All') { // if season was supplied
-									return garment.season === this.season
+					filterByGenderAndSeason() {
+						console.log(this.season);
+
+						fetch('/api/garments')
+							.then(r => r.json())
+							.then(userData => {
+
+								const results = userData.data.filter(garment => {
+									if (this.gender != 'All' && this.season != 'All') {
+										return garment.gender === this.gender
+											&& garment.season === this.season;
+									} else if (this.gender != 'All') { // if gender was supplied
+										return garment.gender === this.gender
+									} else if (this.season != 'All') { // if season was supplied
+										return garment.season === this.season
+									}
+									return true;
+								})
+
+								this.garments = results;
+								console.log(results);
+								if (results.length < 1) {
+									this.errorMessage('No Garments Found');
 								}
-								return true;
+
+							})
+					},
+
+					filterByPrice() {
+						console.log(this.price);
+						const maxPrice = Number(this.priceRange)
+						fetch('/api/garments')
+							.then(r => r.json())
+							.then(userData => {
+								const results = userData.data.filter(garment => {
+									// filter only if the maxPrice is bigger than maxPrice
+									if (maxPrice > 0) {
+										return garment.price <= maxPrice;
+									}
+									return true;
+								});
+								this.garments = results;
+
 							})
 
-							this.garments = results;
-							console.log(results);
-							if(results.length<1){
-								this.errorMessage('No Garments Found');
-							}
-
-						})
-				},
-
-				filterByPrice() {
-					console.log(this.price);
-					const maxPrice = Number(this.priceRange)
-					fetch('/api/garments')
-						.then(r => r.json())
-						.then(userData => {
-							const results = userData.data.filter(garment => {
-								// filter only if the maxPrice is bigger than maxPrice
-								if (maxPrice > 0) {
-									return garment.price <= maxPrice;
-								}
-								return true;
-							});
-							this.garments = results;
-							// if(results.length<1){
-							// 	this.errorMessage('No Garments Found');
-							// }
-						})
-
+					}
 				}
-			}))
+
+			})
 		})
 	</script>
 

@@ -1,4 +1,15 @@
+const {generateAccessToken} = require ('./AuthToken')
 module.exports = function(app, db) {
+    console.log('database running');
+
+    // Home  Route
+    app.get('/', function (req, res) {
+        //  generate Token
+        const token = generateAccessToken('Omphile')
+        res.json({ token: token })
+        console.log(token);
+      
+      });
 
     app.get('/api/test', function(req, res) {
         res.json({

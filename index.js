@@ -4,7 +4,8 @@ const express = require('express');
 const assert = require('assert');
 const fs = require('fs');
 require('dotenv').config()
-
+const jwt = require('jsonwebtoken');
+const { authToken, generateAccessToken } = require('./AuthToken');
 
 const API = require('./api');
 const { default: axios } = require('axios');
@@ -23,17 +24,15 @@ const pgp = PgPromise({});
 const config = {
   connectionString: process.env.DATABASE_URL || 'postgres://gary:gar123@localhost:5432/garment_app',
   max: 30,
-  ssl:{ rejectUnauthorized : false}
+  ssl: { rejectUnauthorized: false }
 };
 
 const db = pgp(config);
 
 API(app, db);
 
-app.get('/',function(req,res) {
-	res.render('index.html');
-  });
 
+app.use(express.static('./public'))
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
